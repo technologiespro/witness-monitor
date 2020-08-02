@@ -1,4 +1,4 @@
-# Price Feed Script for BitShares SmartAssets & Witness monitor
+### Price Feed Script for BitShares SmartAssets & Witness monitor
 
 (+) Price feeds BitShares SmartAssets
 
