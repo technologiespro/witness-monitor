@@ -12,7 +12,15 @@ const providerPaprika = new provider({
 
 class paprika {
     async getPrices() {
-        return await providerPaprika.getPrices()
+        const quotes = (await providerPaprika.getPrices()).quotes
+        let result = {
+            "CNY": quotes.CNY.price,
+            "EUR": quotes.EUR.price,
+            "RUBLE": quotes.RUB.price,
+            "USD": quotes.USD.price,
+        }
+
+        return result
     }
 }
 
