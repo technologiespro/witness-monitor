@@ -3,8 +3,14 @@ const router = express.Router();
 const BitShares = require('btsdex')
 const jsonFile = require('jsonfile')
 const level = require('level')
+const scheduler = require("node-schedule")
 const db = level('.bitshares', {valueEncoding: 'json'})
 const CONFIG = jsonFile.readFileSync('./config.json')
+
+const Paprika = require('../providers/coinpaprika')
+const paprika = new Paprika()
+
+let latestFeeds = {}
 
 BitShares.connect(CONFIG.node)
 BitShares.subscribe('connected', startAfterConnected);
@@ -19,9 +25,9 @@ async function orderBook(base, quote, limit = 5) {
     return result
 }
 
-async function startAfterConnected() {
+async function getAvgPrice(base, quote) {
     let limit = 2
-    let data = await orderBook('RUBLE', 'BTS', limit)
+    let data = await orderBook(base, quote, limit)
     let bids = 0
     let asks = 0
 
@@ -34,10 +40,27 @@ async function startAfterConnected() {
     }
 
     let avgPrice = ((bids / limit + asks / limit) / 2) * 1.18
-
-
     console.log('avgPrice', avgPrice)
+    return avgPrice.toFixed(5)
+
 }
+
+async function startAfterConnected() {
+
+    latestFeeds = await paprika.getPrices()
+    latestFeeds['RUBLE'].cer = await getAvgPrice('RUBLE', 'BTS')
+    latestFeeds['EUR'].cer = await getAvgPrice('EUR', 'BTS')
+
+    scheduler.scheduleJob("1 */1 * * * *", async () => {
+        latestFeeds = await paprika.getPrices()
+        latestFeeds['RUBLE'].cer = await getAvgPrice('RUBLE', 'BTS')
+        latestFeeds['EUR'].cer = await getAvgPrice('EUR', 'BTS')
+    });
+}
+
+router.get('/feeds', async function(req, res, next) {
+    await res.json(latestFeeds)
+});
 
 module.exports = router
 
