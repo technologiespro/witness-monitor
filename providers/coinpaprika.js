@@ -1,6 +1,6 @@
 const provider = require('../modules/provider')
 
-const paprika = new provider({
+const providerPaprika = new provider({
     apiUrl: "https://api.coinpaprika.com/v1/tickers/bts-bitshares?quotes=",
     currency: {
         "EUR": "EUR",
@@ -10,6 +10,12 @@ const paprika = new provider({
     },
 })
 
-async function getPrices() {
-    return await paprika.getPrices()
+class paprika {
+    async getPrices() {
+        return await providerPaprika.getPrices()
+    }
 }
+
+module.exports = paprika;
+
+
