@@ -1,7 +1,5 @@
 const axios = require('axios')
 
-// bitshares asset: coinpaprika ticker
-
 class priceProvider {
     constructor(config) {
         this.config = config
