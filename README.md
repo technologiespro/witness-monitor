@@ -1,6 +1,6 @@
 ### Price Feed Script for BitShares SmartAssets & Witness monitor
 
-(+) Price feeds BitShares SmartAssets
+(+) Publish Price feeds BitShares SmartAssets
 
 (~) Personal Telegram notifications about witness work & stats
 
@@ -19,3 +19,9 @@ nvm alias default 10.21.0
 npm install -g npm forever grunt-cli
 ```
 
+## Install App
+```
+git clone https://github.com/technologiespro/witness-monitor.git
+cd witness-monitor
+npm install
+```
