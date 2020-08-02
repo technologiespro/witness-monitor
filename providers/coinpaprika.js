@@ -1,7 +1,13 @@
 const provider = require('../modules/provider')
+const jsonFile = require('jsonfile')
+const assets = jsonFile.readFileSync('./config.json').priceFeeds.assets
+
+// bitshares symbol:paprika symbol
 const currency = {
     "EUR": "EUR",
     "RUBLE": "RUB",
+    "USD": "USD",
+    "CNY": "CNY",
 }
 
 const providerPaprika = new provider({
@@ -13,7 +19,7 @@ class paprika {
     async getPrices() {
         const quotes = (await providerPaprika.getPrices()).quotes
         let result = {}
-        let qAssets = Object.keys(currency)
+        let qAssets = Object.keys(assets)
         for (let i = 0; i < qAssets.length; i++) {
             result[qAssets[i]] = {
                 price: quotes[currency[qAssets[i]]].price,
