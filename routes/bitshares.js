@@ -106,19 +106,17 @@ async function startAfterConnected() {
 
     await feelPrices()
 
-
-//    latestFeeds['RUBLE'].cer = await getAvgPrice('RUBLE', 'BTS')
-//    latestFeeds['EUR'].cer = await getAvgPrice('EUR', 'BTS')
-
-    scheduler.scheduleJob("1 */31 * * * *", async () => {
+    scheduler.scheduleJob("5 */31 * * * *", async () => {
         await feelPrices()
         let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
         for (let i = 0; i < feedAssets.length; i++) {
-            await publishPrice({
-                symbol: feedAssets[i],
-                price: latestFeeds[feedAssets[i]].price,
-                cer: latestFeeds[feedAssets[i]].cer
-            })
+            if (latestFeeds[feedAssets[i]].cer > 0) {
+                await publishPrice({
+                    symbol: feedAssets[i],
+                    price: latestFeeds[feedAssets[i]].price,
+                    cer: latestFeeds[feedAssets[i]].cer
+                })
+            }
         }
     });
 
