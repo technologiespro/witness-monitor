@@ -1,7 +1,9 @@
 # Price Feed Script for BitShares SmartAssets & Witness monitor
 
 (+) Price feeds BitShares SmartAssets
+
 (~) Personal Telegram notifications about witness work & stats
+
 (~) Personal WeChat notifications about witness work & stats
 
 ## NodeJS Setup (if necessary)
