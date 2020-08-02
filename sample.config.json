@@ -1,4 +1,32 @@
 {
   "port": 3090,
-  "node": "ws://localhost:8090"
+  "node": "ws://localhost:8090",
+  "coreAsset": "BTS",
+  "producer": {
+    "name": "your_witness_name",
+    "key": "your_active_key"
+  },
+  "priceFeeds": {
+    "isOn": true,
+    "cron": "1 1 */1 * * *",
+    "assets": {
+      "EUR": {
+        "SYMBOL": "EUR",
+        "MCR": 1.6,
+        "MSSR": 1.02
+      },
+      "RUBLE": {
+        "SYMBOL": "RUBLE",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      }
+    },
+    "priceProviders": {
+      "coinpaprika": true
+    }
+  },
+  "monitor": {
+    "isOn": false,
+    "telegram": {}
+  }
 }
