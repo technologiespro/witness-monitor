@@ -25,3 +25,24 @@ git clone https://github.com/technologiespro/witness-monitor.git
 cd witness-monitor
 npm install
 ```
+
+## Settings
+```
+mv sample.config.json config.json
+nano config.json
+```
+
+set
+
+- `producer.name` - witness name
+- `producer.key` - witness active key
+
+save and exit from nano editor: CTRL+O, CTRL+X
+
+## Start/Stop
+
+`npm start` for testing
+
+`forever start bin/www` for background running
+
+`forever stop bin/www` for stopping
