@@ -1,0 +1,4 @@
+{
+  "port": 3090,
+  "node": "ws://localhost:8090"
+}
