@@ -11,6 +11,7 @@ const Paprika = require('../providers/coinpaprika')
 const paprika = new Paprika()
 
 let latestFeeds = {}
+let assets = {}
 
 BitShares.connect(CONFIG.node)
 BitShares.subscribe('connected', startAfterConnected);
@@ -48,35 +49,36 @@ async function getAvgPrice(base, quote) {
 }
 
 async function publishPrice(options) {
-    let assetId = (await BitShares.assets['XBTSX.EUR']).id
     let params = {
         "publisher": feeder.id,
-        "asset_id": assetId,
+        "asset_id": assets[options.symbol].id,
         "feed": {
             "settlement_price": {
                 "base": {
-                    "amount": options.price,
-                    "asset_id": assetId
+                    "amount": Math.round(options.price * 10 ** assets[options.symbol].precision),
+                    "asset_id": assets[options.symbol].id
                 },
                 "quote": {
-                    "amount": 1 * 10 ** 5,
-                    "asset_id": "1.3.0"
+                    "amount": 10 ** assets[CONFIG.coreAsset].precision,
+                    "asset_id": assets[CONFIG.coreAsset].id // 1.0.3
                 }
             },
-            "maintenance_collateral_ratio": CONFIG.priceFeeds.assets[options.symbol].MCR * 100,
-            "maximum_short_squeeze_ratio": CONFIG.priceFeeds.assets[options.symbol].MSSR * 100,
+            "maintenance_collateral_ratio": CONFIG.priceFeeds.assets[options.symbol].MCR * 1000,
+            "maximum_short_squeeze_ratio": CONFIG.priceFeeds.assets[options.symbol].MSSR * 1000,
             "core_exchange_rate": {
                 "base": {
-                    "amount": options.cer,
-                    "asset_id": assetId
+                    "amount": Math.round(options.cer * 10 ** assets[options.symbol].precision),
+                    "asset_id": assets[options.symbol].id
                 },
                 "quote": {
-                    "amount": 1 * 10 ** 5,
-                    "asset_id": "1.3.0"
+                    "amount": 10 ** assets[CONFIG.coreAsset].precision,
+                    "asset_id": assets[CONFIG.coreAsset].id // 1.0.3
                 }
             }
         }
     }
+
+    console.log('params', params)
 
     let tx = bot.newTx()
     tx.asset_publish_feed(params)
@@ -86,17 +88,29 @@ async function publishPrice(options) {
     //asset_publish_feed
 }
 
+async function feelPrices() {
+    assets[CONFIG.coreAsset] = (await BitShares.assets[CONFIG.coreAsset])
+    let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
+    latestFeeds = await paprika.getPrices()
+    for (let i = 0; i < feedAssets.length; i++) {
+        assets[feedAssets[i]] = (await BitShares.assets[feedAssets[i]])
+        latestFeeds[feedAssets[i]].cer = await getAvgPrice(feedAssets[i], 'BTS')
+    }
+}
+
+
 async function startAfterConnected() {
 
     bot = new BitShares(CONFIG.producer.name, CONFIG.producer.key)
     feeder = await BitShares.accounts[CONFIG.producer.name]
-    console.log('registrar', feeder.id, feeder.name)
+    console.log('producer', feeder.id, feeder.name)
 
-    /*
-    latestFeeds = await paprika.getPrices()
-    latestFeeds['RUBLE'].cer = await getAvgPrice('RUBLE', 'BTS')
-    latestFeeds['EUR'].cer = await getAvgPrice('EUR', 'BTS')
-*/
+    await feelPrices()
+
+
+//    latestFeeds['RUBLE'].cer = await getAvgPrice('RUBLE', 'BTS')
+//    latestFeeds['EUR'].cer = await getAvgPrice('EUR', 'BTS')
+
     scheduler.scheduleJob("1 */1 * * * *", async () => {
         /*
         latestFeeds = await paprika.getPrices()
@@ -105,12 +119,14 @@ async function startAfterConnected() {
          */
     });
 
-
+/*
     await publishPrice({
         symbol: 'EUR',
-        price: Math.trunc(0.022192 * 10 ** 4),
-        cer: Math.trunc(0.02728 * 10 ** 4)
+        price: latestFeeds['EUR'].price,
+        cer: latestFeeds['EUR'].cer
     })
+ */
+
 
 }
 
