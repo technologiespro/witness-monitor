@@ -14,12 +14,23 @@ class paprika {
     async getPrices() {
         const quotes = (await providerPaprika.getPrices()).quotes
         let result = {
-            "CNY": quotes.CNY.price,
-            "EUR": quotes.EUR.price,
-            "RUBLE": quotes.RUB.price,
-            "USD": quotes.USD.price,
+            "CNY": {
+                price: quotes.CNY.price.toFixed(6),
+                cer: 0,
+            },
+            "EUR": {
+                price: quotes.EUR.price.toFixed(6),
+                cer: 0,
+            },
+            "RUBLE": {
+                price: quotes.RUB.price.toFixed(6),
+                cer: 0,
+            },
+            "USD": {
+                price: quotes.USD.price.toFixed(6),
+                cer: 0,
+            }
         }
-
         return result
     }
 }
