@@ -1,12 +1,13 @@
 {
-  "name": "bts-pricefeeds-node",
-  "description": "Price Feed Script for BitShares SmartAssets nodejs",
+  "name": "witness-monitor",
+  "description": "Price Feed Script for BitShares SmartAssets & Witness monitor on nodejs",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "btsdex": "^0.7.3",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
