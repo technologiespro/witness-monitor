@@ -83,9 +83,7 @@ async function publishPrice(options) {
     let tx = bot.newTx()
     tx.asset_publish_feed(params)
     let result = await tx.broadcast()
-    console.log(result)
-
-    //asset_publish_feed
+    console.log('tx result', result)
 }
 
 async function feelPrices() {
@@ -96,6 +94,7 @@ async function feelPrices() {
         assets[feedAssets[i]] = (await BitShares.assets[feedAssets[i]])
         latestFeeds[feedAssets[i]].cer = await getAvgPrice(feedAssets[i], 'BTS')
     }
+    return
 }
 
 
@@ -111,12 +110,16 @@ async function startAfterConnected() {
 //    latestFeeds['RUBLE'].cer = await getAvgPrice('RUBLE', 'BTS')
 //    latestFeeds['EUR'].cer = await getAvgPrice('EUR', 'BTS')
 
-    scheduler.scheduleJob("1 */1 * * * *", async () => {
-        /*
-        latestFeeds = await paprika.getPrices()
-        latestFeeds['RUBLE'].cer = await getAvgPrice('RUBLE', 'BTS')
-        latestFeeds['EUR'].cer = await getAvgPrice('EUR', 'BTS')
-         */
+    scheduler.scheduleJob("1 */31 * * * *", async () => {
+        await feelPrices()
+        let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
+        for (let i = 0; i < feedAssets.length; i++) {
+            await publishPrice({
+                symbol: feedAssets[i],
+                price: latestFeeds[feedAssets[i]].price,
+                cer: latestFeeds[feedAssets[i]].cer
+            })
+        }
     });
 
 /*
@@ -125,8 +128,14 @@ async function startAfterConnected() {
         price: latestFeeds['EUR'].price,
         cer: latestFeeds['EUR'].cer
     })
- */
 
+
+    await publishPrice({
+        symbol: 'RUBLE',
+        price: latestFeeds['RUBLE'].price,
+        cer: latestFeeds['RUBLE'].cer
+    })
+*/
 
 }
 
