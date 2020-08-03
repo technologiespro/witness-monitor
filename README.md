@@ -6,6 +6,11 @@
 
 (~) Personal WeChat notifications about witness work & stats
 
+
+### Prices
+
+EUR, RUBLE, USD, CNY, JPY, GBP, AUD
+
 ## NodeJS Setup (if necessary)
 
 ```
