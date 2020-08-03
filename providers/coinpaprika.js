@@ -10,6 +10,7 @@ const currency = {
     "CNY": "CNY",
     "JPY": "JPY",
     "GBP": "GBP",
+    "AUD": "AUD",
 }
 
 const providerPaprika = new provider({
