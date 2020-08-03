@@ -4,8 +4,6 @@
 
 (~) Personal Telegram notifications about witness work & stats
 
-(~) Personal WeChat notifications about witness work & stats
-
 
 ### Prices
 
