@@ -11,6 +11,8 @@ const currency = {
     "JPY": "JPY",
     "GBP": "GBP",
     "AUD": "AUD",
+    "SEK": "SEK",
+    "KRW": "KRW",
 }
 
 const providerPaprika = new provider({

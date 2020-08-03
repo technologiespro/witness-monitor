@@ -9,7 +9,7 @@
 
 ### Prices
 
-EUR, RUBLE, USD, CNY, JPY, GBP, AUD
+EUR, RUBLE, USD, CNY, JPY, GBP, AUD, SEK, KRW
 
 ## NodeJS Setup (if necessary)
 
