@@ -106,7 +106,7 @@ async function startAfterConnected() {
 
     await feelPrices()
 
-    scheduler.scheduleJob("5 */45 * * * *", async () => {
+    scheduler.scheduleJob("5 */58 * * * *", async () => {
         await feelPrices()
         let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
         for (let i = 0; i < feedAssets.length; i++) {
@@ -125,13 +125,6 @@ async function startAfterConnected() {
         symbol: 'EUR',
         price: latestFeeds['EUR'].price,
         cer: latestFeeds['EUR'].cer
-    })
-
-
-    await publishPrice({
-        symbol: 'RUBLE',
-        price: latestFeeds['RUBLE'].price,
-        cer: latestFeeds['RUBLE'].cer
     })
 */
 
