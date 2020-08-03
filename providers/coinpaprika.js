@@ -8,6 +8,7 @@ const currency = {
     "RUBLE": "RUB",
     "USD": "USD",
     "CNY": "CNY",
+    "JPY": "JPY",
 }
 
 const providerPaprika = new provider({
