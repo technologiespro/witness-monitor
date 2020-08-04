@@ -65,3 +65,5 @@ save and exit from nano editor: CTRL+O, CTRL+X
 `forever start bin/www` for background running
 
 `forever stop bin/www` for stopping
+
+or `sh restart.sh` shell script restart
