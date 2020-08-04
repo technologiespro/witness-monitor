@@ -106,7 +106,7 @@ async function startAfterConnected() {
 
     await feelPrices()
 
-    scheduler.scheduleJob("5 */58 * * * *", async () => {
+    scheduler.scheduleJob(CONFIG.priceFeeds.cron, async () => {
         await feelPrices()
         let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
         for (let i = 0; i < feedAssets.length; i++) {
