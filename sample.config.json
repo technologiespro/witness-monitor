@@ -6,9 +6,15 @@
     "name": "your_witness_name",
     "key": "your_active_key"
   },
+  "producerBackup": {
+    "isOn": true,
+    "name": "witness_name",
+    "key": "backup_signing_key",
+    "url": "witness_url"
+  },
   "priceFeeds": {
     "isOn": true,
-    "cron": "1 1 */1 * * *",
+    "cron": "5 */58 * * * *",
     "assets": {
       "EUR": {
         "SYMBOL": "EUR",
