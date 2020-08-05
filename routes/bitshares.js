@@ -83,7 +83,7 @@ async function publishPrice(options) {
     let tx = bot.newTx()
     tx.asset_publish_feed(params)
     let result = await tx.broadcast()
-    console.log('tx sent')
+    console.log('publish price', options.symbol)
     //console.log('tx result', result)
 }
 

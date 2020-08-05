@@ -28,6 +28,21 @@
         "SYMBOL": "RUBLE",
         "MCR": 1.75,
         "MSSR": 1.1
+      },
+      "JPY": {
+        "SYMBOL": "JPY",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
+      "GBP": {
+        "SYMBOL": "GBP",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
+      "KRW": {
+        "SYMBOL": "KRW",
+        "MCR": 1.75,
+        "MSSR": 1.1
       }
     },
     "priceProviders": {
