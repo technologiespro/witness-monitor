@@ -7,7 +7,7 @@
     "key": "your_active_key"
   },
   "producerBackup": {
-    "isOn": true,
+    "isOn": false,
     "name": "witness_name",
     "key": "backup_signing_key",
     "url": "witness_url"
