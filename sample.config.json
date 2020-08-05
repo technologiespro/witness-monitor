@@ -14,7 +14,10 @@
   },
   "priceFeeds": {
     "isOn": true,
-    "cron": "5 */58 * * * *",
+    "cron": {
+      "hour": null,
+      "minute": 51
+    },
     "assets": {
       "EUR": {
         "SYMBOL": "EUR",

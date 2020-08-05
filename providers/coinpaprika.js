@@ -31,7 +31,6 @@ class paprika {
                 cer: 0,
             }
         }
-
         return result
     }
 }

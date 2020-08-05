@@ -12,12 +12,11 @@ const paprika = new Paprika()
 
 let latestFeeds = {}
 let assets = {}
+let bot = null
+let feeder = null
 
 BitShares.connect(CONFIG.node)
 BitShares.subscribe('connected', startAfterConnected);
-
-let bot = null
-let feeder = null
 
 async function orderBook(base, quote, limit = 5) {
     let result = null
@@ -35,6 +34,7 @@ async function getAvgPrice(base, quote) {
     let bids = 0
     let asks = 0
 
+
     for (let i = 0; i < data.bids.length; i++) {
         bids = bids + (data.bids[i].price * 1)
     }
@@ -42,6 +42,8 @@ async function getAvgPrice(base, quote) {
     for (let i = 0; i < data.asks.length; i++) {
         asks = asks + (data.asks[i].price * 1)
     }
+
+
 
     let avgPrice = ((bids / limit + asks / limit) / 2) * 1.18
     return avgPrice.toFixed(5)
@@ -78,12 +80,11 @@ async function publishPrice(options) {
         }
     }
 
-    console.log('params', params)
-
     let tx = bot.newTx()
     tx.asset_publish_feed(params)
     let result = await tx.broadcast()
-    console.log('tx result', result)
+    console.log('tx sent')
+    //console.log('tx result', result)
 }
 
 async function feelPrices() {
@@ -94,32 +95,14 @@ async function feelPrices() {
         assets[feedAssets[i]] = (await BitShares.assets[feedAssets[i]])
         latestFeeds[feedAssets[i]].cer = await getAvgPrice(feedAssets[i], 'BTS')
     }
-    return
 }
 
 
 async function startAfterConnected() {
-
     bot = new BitShares(CONFIG.producer.name, CONFIG.producer.key)
     feeder = await BitShares.accounts[CONFIG.producer.name]
     console.log('producer', feeder.id, feeder.name)
-
     await feelPrices()
-
-    scheduler.scheduleJob(CONFIG.priceFeeds.cron, async () => {
-        await feelPrices()
-        let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
-        for (let i = 0; i < feedAssets.length; i++) {
-            if (latestFeeds[feedAssets[i]].cer > 0) {
-                await publishPrice({
-                    symbol: feedAssets[i],
-                    price: latestFeeds[feedAssets[i]].price,
-                    cer: latestFeeds[feedAssets[i]].cer
-                })
-            }
-        }
-    });
-
 /*
     await publishPrice({
         symbol: 'EUR',
@@ -127,8 +110,27 @@ async function startAfterConnected() {
         cer: latestFeeds['EUR'].cer
     })
 */
-
 }
+
+// Recurrence Rule Scheduling
+let cronRule = new scheduler.RecurrenceRule()
+cronRule.minute = CONFIG.priceFeeds.cron.minute // 0 - 59
+if (CONFIG.priceFeeds.cron.hour) {
+    cronRule.hour = CONFIG.priceFeeds.cron.hour // 0 - 23
+}
+scheduler.scheduleJob(cronRule, async () => {
+    await feelPrices()
+    let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
+    for (let i = 0; i < feedAssets.length; i++) {
+        if (latestFeeds[feedAssets[i]].cer > 0) {
+            await publishPrice({
+                symbol: feedAssets[i],
+                price: latestFeeds[feedAssets[i]].price,
+                cer: latestFeeds[feedAssets[i]].cer
+            })
+        }
+    }
+});
 
 router.get('/feeds', async function (req, res, next) {
     await res.json(latestFeeds)
