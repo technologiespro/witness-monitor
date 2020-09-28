@@ -43,10 +43,9 @@ async function getAvgPrice(base, quote) {
         asks = asks + (data.asks[i].price * 1)
     }
 
-
-
     let avgPrice = ((bids / limit + asks / limit) / 2) * 1.18
-    return avgPrice.toFixed(5)
+
+    return avgPrice.toFixed(7)
 
 }
 
@@ -101,7 +100,7 @@ async function feelPrices() {
 async function startAfterConnected() {
     bot = new BitShares(CONFIG.producer.name, CONFIG.producer.key)
     feeder = await BitShares.accounts[CONFIG.producer.name]
-    console.log('producer', feeder.id, feeder.name)
+    console.log('account', feeder.id, feeder.name)
     await feelPrices()
 /*
     await publishPrice({
@@ -112,13 +111,8 @@ async function startAfterConnected() {
 */
 }
 
-// Recurrence Rule Scheduling
-let cronRule = new scheduler.RecurrenceRule()
-cronRule.minute = CONFIG.priceFeeds.cron.minute // 0 - 59
-if (CONFIG.priceFeeds.cron.hour) {
-    cronRule.hour = CONFIG.priceFeeds.cron.hour // 0 - 23
-}
-scheduler.scheduleJob(cronRule, async () => {
+async function publishAllFeeds() {
+    console.log('-----------------------')
     await feelPrices()
     let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
     for (let i = 0; i < feedAssets.length; i++) {
@@ -130,10 +124,29 @@ scheduler.scheduleJob(cronRule, async () => {
             })
         }
     }
+}
+
+// Recurrence Rule Scheduling
+let cronRule = new scheduler.RecurrenceRule()
+cronRule.minute = CONFIG.priceFeeds.cron.minute // 0 - 59
+if (CONFIG.priceFeeds.cron.hour) {
+    cronRule.hour = CONFIG.priceFeeds.cron.hour // 0 - 23
+}
+
+scheduler.scheduleJob(cronRule, async () => {
+    await publishAllFeeds()
 });
 
 router.get('/feeds', async function (req, res, next) {
     await res.json(latestFeeds)
+});
+
+router.get('/publish', async function (req, res, next) {
+    await publishAllFeeds()
+    await res.json({
+        status: 'published',
+        data: latestFeeds
+    })
 });
 
 module.exports = router

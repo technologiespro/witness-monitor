@@ -13,6 +13,7 @@ const currency = {
     "AUD": "AUD",
     "SEK": "SEK",
     "KRW": "KRW",
+    "BTC": "BTC",
 }
 
 const providerPaprika = new provider({
