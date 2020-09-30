@@ -140,14 +140,15 @@ scheduler.scheduleJob(cronRule, async () => {
 router.get('/feeds', async function (req, res, next) {
     await res.json(latestFeeds)
 });
-
+/*
 router.get('/publish', async function (req, res, next) {
-    await publishAllFeeds()
+    await publishAllFeeds();
     await res.json({
         status: 'published',
         data: latestFeeds
     })
 });
+ */
 
-module.exports = router
+module.exports = router;
 
