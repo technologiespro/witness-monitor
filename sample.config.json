@@ -20,11 +20,6 @@
       "minute": 51
     },
     "assets": {
-      "EUR": {
-        "SYMBOL": "EUR",
-        "MCR": 1.6,
-        "MSSR": 1.02
-      },
       "RUBLE": {
         "SYMBOL": "RUBLE",
         "MCR": 1.75,
@@ -42,6 +37,26 @@
       },
       "KRW": {
         "SYMBOL": "KRW",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
+      "EUR1.0": {
+        "SYMBOL": "EUR",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
+      "CNY1.0": {
+        "SYMBOL": "CNY",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
+      "USD1.0": {
+        "SYMBOL": "USD",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
+      "BTC1.0": {
+        "SYMBOL": "BTC",
         "MCR": 1.75,
         "MSSR": 1.1
       }
