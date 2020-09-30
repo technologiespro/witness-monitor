@@ -1,6 +1,6 @@
-const provider = require('../modules/provider')
-const jsonFile = require('jsonfile')
-const assets = jsonFile.readFileSync('./config.json').priceFeeds.assets
+const provider = require('../modules/provider');
+const jsonFile = require('jsonfile');
+const assets = jsonFile.readFileSync('./config.json').priceFeeds.assets;
 
 // bitshares symbol:paprika symbol
 const currency = {
@@ -23,15 +23,16 @@ const providerPaprika = new provider({
 
 class paprika {
     async getPrices() {
-        const quotes = (await providerPaprika.getPrices()).quotes
-        let result = {}
-        let qAssets = Object.keys(assets)
+        const quotes = (await providerPaprika.getPrices()).quotes;
+        let result = {};
+        let qAssets = Object.keys(assets);
         for (let i = 0; i < qAssets.length; i++) {
             result[qAssets[i]] = {
-                price: quotes[currency[qAssets[i]]].price,
-                cer: 0,
+                price: quotes[currency[assets[qAssets[i]].SYMBOL]].price,
+                cer: (quotes[currency[assets[qAssets[i]].SYMBOL]].price + (quotes[currency[assets[qAssets[i]].SYMBOL]].price * 0.075)).toFixed(8) * 1,
             }
         }
+        console.log(result);
         return result
     }
 }
