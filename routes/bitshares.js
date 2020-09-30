@@ -50,6 +50,8 @@ async function getAvgPrice(base, quote) {
 }
 
 async function publishPrice(options) {
+    console.log('----------------------');
+    console.log('id', assets[options.symbol].id);
     let params = {
         "publisher": feeder.id,
         "asset_id": assets[options.symbol].id,
@@ -87,12 +89,14 @@ async function publishPrice(options) {
 }
 
 async function feelPrices() {
-    assets[CONFIG.coreAsset] = (await BitShares.assets[CONFIG.coreAsset])
-    let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
-    latestFeeds = await paprika.getPrices()
+    assets[CONFIG.coreAsset] = (await BitShares.assets[CONFIG.coreAsset]);
+    let feedAssets = Object.keys(CONFIG.priceFeeds.assets);
+    latestFeeds = await paprika.getPrices();
     for (let i = 0; i < feedAssets.length; i++) {
         assets[feedAssets[i]] = (await BitShares.assets[feedAssets[i]])
-        latestFeeds[feedAssets[i]].cer = await getAvgPrice(feedAssets[i], 'BTS')
+        //let cerOrderBook = await getAvgPrice(feedAssets[i], 'BTS')
+        //console.log('cerOrderBook', cerOrderBook)
+        latestFeeds[feedAssets[i]].cer = (latestFeeds[feedAssets[i]].price + (latestFeeds[feedAssets[i]].price * 0.08)).toFixed(8) * 1
     }
 }
 
@@ -101,36 +105,34 @@ async function startAfterConnected() {
     bot = new BitShares(CONFIG.producer.name, CONFIG.producer.key)
     feeder = await BitShares.accounts[CONFIG.producer.name]
     console.log('account', feeder.id, feeder.name)
-    await feelPrices()
-/*
-    await publishPrice({
-        symbol: 'EUR',
-        price: latestFeeds['EUR'].price,
-        cer: latestFeeds['EUR'].cer
-    })
-*/
+    await feelPrices();
 }
 
 async function publishAllFeeds() {
     console.log('-----------------------')
-    await feelPrices()
+    await feelPrices();
     let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
     for (let i = 0; i < feedAssets.length; i++) {
         if (latestFeeds[feedAssets[i]].cer > 0) {
-            await publishPrice({
-                symbol: feedAssets[i],
-                price: latestFeeds[feedAssets[i]].price,
-                cer: latestFeeds[feedAssets[i]].cer
-            })
+            try {
+                await publishPrice({
+                    symbol: feedAssets[i],
+                    price: latestFeeds[feedAssets[i]].price,
+                    cer: latestFeeds[feedAssets[i]].cer
+                });
+            } catch(e) {
+                console.log('err publish', feedAssets[i]);
+            }
+
         }
     }
 }
 
 // Recurrence Rule Scheduling
-let cronRule = new scheduler.RecurrenceRule()
-cronRule.minute = CONFIG.priceFeeds.cron.minute // 0 - 59
+let cronRule = new scheduler.RecurrenceRule();
+cronRule.minute = CONFIG.priceFeeds.cron.minute;// 0 - 59
 if (CONFIG.priceFeeds.cron.hour) {
-    cronRule.hour = CONFIG.priceFeeds.cron.hour // 0 - 23
+    cronRule.hour = CONFIG.priceFeeds.cron.hour;// 0 - 23
 }
 
 scheduler.scheduleJob(cronRule, async () => {
@@ -140,6 +142,7 @@ scheduler.scheduleJob(cronRule, async () => {
 router.get('/feeds', async function (req, res, next) {
     await res.json(latestFeeds)
 });
+
 /*
 router.get('/publish', async function (req, res, next) {
     await publishAllFeeds();
@@ -149,6 +152,7 @@ router.get('/publish', async function (req, res, next) {
     })
 });
  */
+
 
 module.exports = router;
 
