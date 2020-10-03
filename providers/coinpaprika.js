@@ -29,7 +29,7 @@ class paprika {
         for (let i = 0; i < qAssets.length; i++) {
             result[qAssets[i]] = {
                 price: quotes[currency[assets[qAssets[i]].SYMBOL]].price,
-                cer: (quotes[currency[assets[qAssets[i]].SYMBOL]].price + (quotes[currency[assets[qAssets[i]].SYMBOL]].price * 0.075)).toFixed(8) * 1,
+                cer: (quotes[currency[assets[qAssets[i]].SYMBOL]].price + (quotes[currency[assets[qAssets[i]].SYMBOL]].price * 0.10)).toFixed(8) * 1,
             }
         }
         console.log(result);

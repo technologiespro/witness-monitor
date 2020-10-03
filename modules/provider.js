@@ -6,10 +6,10 @@ class priceProvider {
     }
 
     async getPrices() {
-        let result = null
-        const apiUrl = this.config.apiUrl + Object.values(this.config.currency).join()
+        let result = null;
+        const apiUrl = this.config.apiUrl + Object.values(this.config.currency).join();
         try {
-            result = (await axios.get(apiUrl)).data
+            result = (await axios.get(apiUrl)).data;
         } catch(e) {
 
         }
