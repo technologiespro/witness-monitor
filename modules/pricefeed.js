@@ -45,6 +45,7 @@ class feeds {
 
             }
         }
+        return this.latestFeeds;
     }
 
     async publishPrice(options) {
