@@ -23,7 +23,6 @@ class metals {
             dataMetals = jsonFile.readFileSync('./metals.json');
         }
 
-
         const rates = dataMetals.rates;
         let assetsKeys = Object.keys(assets);
         for (let i = 0; i < assetsKeys.length; i++) {
