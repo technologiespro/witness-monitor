@@ -55,10 +55,10 @@ if (CONFIG.dev) {
   });
 
   router.get('/publish-metal', async function (req, res, next) {
-    latestFeeds = await feed.publishMetalFeeds();
+    let latestFeedsMetal = await feed.publishMetalFeeds();
     await res.json({
       status: 'published',
-      data: latestFeeds
+      data: latestFeedsMetal
     })
   });
 
