@@ -51,6 +51,8 @@ class feeds {
     async publishPrice(options) {
         console.log('----------------------');
         console.log('id', this.assets[options.symbol].id);
+        console.log('price', options.price);
+        console.log('cer', options.cer);
         let params = {
             "publisher": this.feeder.id,
             "asset_id": this.assets[options.symbol].id,
