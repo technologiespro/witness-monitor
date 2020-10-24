@@ -1,11 +1,15 @@
 const Paprika = require('../providers/coinpaprika');
 const paprika = new Paprika();
 
+const Metals = require('../providers/metals');
+const metals = new Metals();
+
 class feeds {
     constructor(options) {
         this.options = options;
         this.assets = {};
         this.latestFeeds = {};
+        this.latestFeedsMetal = {};
     }
 
     async init() {
@@ -84,9 +88,17 @@ class feeds {
 
         let tx = this.account.newTx();
         tx.asset_publish_feed(params);
-        let result = await tx.broadcast();
+        await tx.broadcast();
         console.log('publish price', options.symbol);
-        //console.log('tx result', result);
+    }
+
+    async function feelPricesMetal() {
+        const feedAssets = Object.keys(CONFIG.priceFeeds.assetsMetal);
+        this.latestFeedsMetal = await metals.getPrices(latestFeeds['USD1.0'].price);
+        for (let i = 0; i < feedAssets.length; i++) {
+            assetsMetal[feedAssets[i]] = (await BitShares.assets[feedAssets[i]]);
+        }
+        return latestFeedsMetal
     }
 
 
