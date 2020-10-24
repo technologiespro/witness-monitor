@@ -1,3 +1,6 @@
+const Paprika = require('../providers/coinpaprika');
+const paprika = new Paprika();
+
 class feeds {
     constructor(options) {
         this.options = options;
@@ -12,8 +15,8 @@ class feeds {
     }
 
     async feelPrices() {
-        this.assets[CONFIG.coreAsset] = (await BitShares.assets[CONFIG.coreAsset]);
-        let feedAssets = Object.keys(CONFIG.priceFeeds.assets);
+        this.assets[this.options.config.coreAsset] = (await this.options.BitSharesInstance.assets[this.options.config.coreAsset]);
+        let feedAssets = Object.keys(this.options.config.priceFeeds.assets);
         this.latestFeeds = await paprika.getPrices();
         for (let i = 0; i < feedAssets.length; i++) {
             assets[feedAssets[i]] = (await BitShares.assets[feedAssets[i]]);
