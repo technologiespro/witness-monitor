@@ -139,6 +139,28 @@ class feeds {
         console.log('publish price metal', options.symbol);
     }
 
+    async publishMetalFeeds() {
+        console.log('-----------------------');
+        await this.feelPricesMetal();
+        const feedAssets = Object.keys(this.options.config.priceFeeds.assetsMetal);
+        console.log(feedAssets, this.latestFeedsMetal);
+
+        for (let i = 0; i < feedAssets.length; i++) {
+            if (this.latestFeedsMetal[feedAssets[i]].cer > 0) {
+                try {
+                    await this.publishPriceMetal({
+                        symbol: feedAssets[i],
+                        price: this.latestFeedsMetal[feedAssets[i]].price,
+                        cer: this.latestFeedsMetal[feedAssets[i]].cer
+                    });
+                } catch(e) {
+                    console.log(e);
+                    console.log('err publish', feedAssets[i]);
+                }
+            }
+        }
+    }
+
 
 }
 
