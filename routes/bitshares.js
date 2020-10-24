@@ -114,6 +114,8 @@ async function publishAllFeeds() {
     let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
     for (let i = 0; i < feedAssets.length; i++) {
         if (latestFeeds[feedAssets[i]].cer > 0) {
+            latestFeeds[feedAssets[i]].price = Math.floor(latestFeeds[feedAssets[i]].price * 10 ** assets[feedAssets[i]].precision) / 10 ** assets[feedAssets[i]].precision;
+            latestFeeds[feedAssets[i]].cer = Math.floor(latestFeeds[feedAssets[i]].cer * 10 ** assets[feedAssets[i]].precision) / 10 ** assets[feedAssets[i]].precision;
             try {
                 await publishPrice({
                     symbol: feedAssets[i],
