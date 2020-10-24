@@ -10,6 +10,7 @@ class feeds {
         this.assets = {};
         this.latestFeeds = {};
         this.latestFeedsMetal = {};
+        this.assetsMetal = {};
     }
 
     async init() {
