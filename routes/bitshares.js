@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const BitShares = require('btsdex');
 const jsonFile = require('jsonfile');
-const level = require('level');
 const scheduler = require("node-schedule");
-const db = level('.bitshares', {valueEncoding: 'json'});
+//const level = require('level');
+//const db = level('.bitshares', {valueEncoding: 'json'});
 const CONFIG = jsonFile.readFileSync('./config.json');
 
 const Paprika = require('../providers/coinpaprika');
@@ -17,37 +17,6 @@ let feeder = null;
 
 BitShares.connect(CONFIG.node);
 BitShares.subscribe('connected', startAfterConnected);
-
-async function orderBook(base, quote, limit = 5) {
-    let result = null;
-    try {
-        result = await BitShares.getOrderBook(base, quote, limit)
-    } catch (e) {
-
-    }
-    return result
-}
-
-async function getAvgPrice(base, quote) {
-    let limit = 2;
-    let data = await orderBook(base, quote, limit);
-    let bids = 0;
-    let asks = 0;
-
-
-    for (let i = 0; i < data.bids.length; i++) {
-        bids = bids + (data.bids[i].price * 1)
-    }
-
-    for (let i = 0; i < data.asks.length; i++) {
-        asks = asks + (data.asks[i].price * 1)
-    }
-
-    let avgPrice = ((bids / limit + asks / limit) / 2) * 1.18
-
-    return avgPrice.toFixed(7)
-
-}
 
 async function publishPrice(options) {
     console.log('----------------------');
@@ -102,16 +71,16 @@ async function feelPrices() {
 
 
 async function startAfterConnected() {
-    bot = new BitShares(CONFIG.producer.name, CONFIG.producer.key)
-    feeder = await BitShares.accounts[CONFIG.producer.name]
-    console.log('account', feeder.id, feeder.name)
+    bot = new BitShares(CONFIG.producer.name, CONFIG.producer.key);
+    feeder = await BitShares.accounts[CONFIG.producer.name];
+    console.log('account', feeder.id, feeder.name);
     await feelPrices();
 }
 
 async function publishAllFeeds() {
-    console.log('-----------------------')
+    console.log('-----------------------');
     await feelPrices();
-    let feedAssets = Object.keys(CONFIG.priceFeeds.assets)
+    let feedAssets = Object.keys(CONFIG.priceFeeds.assets);
     for (let i = 0; i < feedAssets.length; i++) {
         if (latestFeeds[feedAssets[i]].cer > 0) {
             latestFeeds[feedAssets[i]].price = Math.floor(latestFeeds[feedAssets[i]].price * 10 ** assets[feedAssets[i]].precision) / 10 ** assets[feedAssets[i]].precision;
