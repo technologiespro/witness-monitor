@@ -47,6 +47,15 @@ if (CONFIG.dev) {
       data: latestFeeds
     })
   });
+
+  router.get('/publish-metal', async function (req, res, next) {
+    latestFeeds = await feed.publishMetalFeeds();
+    await res.json({
+      status: 'published',
+      data: latestFeeds
+    })
+  });
+
 }
 
 module.exports = router;
