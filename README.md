@@ -52,3 +52,12 @@ save and exit from nano editor: CTRL+O, CTRL+X
 `forever stop bin/www` for stopping
 
 or `sh restart.sh` shell script restart
+
+
+## GOLD, SOLVER metal provider
+
+- register on metals-api.com
+- get API KEY
+- SET API KEY in config.json > API.METALS = "YOUR_METAL_API_KEY"
+
+default run every 24 hours
