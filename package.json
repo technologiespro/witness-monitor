@@ -1,7 +1,7 @@
 {
   "name": "witness-monitor",
   "description": "Price Feed Script for BitShares SmartAssets & Witness monitor on nodejs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "TechnoL0g <technolog@smartholdem.io>",
   "private": true,
   "bin": {
