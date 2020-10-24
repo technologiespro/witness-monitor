@@ -58,7 +58,7 @@ class feeds {
         console.log('id', this.assets[options.symbol].id);
         console.log('price', options.price);
         console.log('cer', options.cer);
-        let params = {
+        const params = {
             "publisher": this.feeder.id,
             "asset_id": this.assets[options.symbol].id,
             "feed": {
@@ -100,6 +100,43 @@ class feeds {
             this.assetsMetal[feedAssets[i]] = (await this.options.BitSharesInstance.assets[feedAssets[i]]);
         }
         return this.latestFeedsMetal;
+    }
+
+    async publishPriceMetal(options) {
+        console.log('id', this.assetsMetal[options.symbol].id);
+        let params = {
+            "publisher": this.feeder.id,
+            "asset_id": this.assetsMetal[options.symbol].id,
+            "feed": {
+                "settlement_price": {
+                    "base": {
+                        "amount": Math.round(options.price * 10 ** this.assetsMetal[options.symbol].precision),
+                        "asset_id": this.assetsMetal[options.symbol].id
+                    },
+                    "quote": {
+                        "amount": 10 ** this.assets[this.options.config.coreAsset].precision,
+                        "asset_id": this.assets[this.options.config.coreAsset].id // 1.0.3
+                    }
+                },
+                "maintenance_collateral_ratio": this.options.config.priceFeeds.assetsMetal[options.symbol].MCR * 1000,
+                "maximum_short_squeeze_ratio": this.options.config.priceFeeds.assetsMetal[options.symbol].MSSR * 1000,
+                "core_exchange_rate": {
+                    "base": {
+                        "amount": Math.round(options.cer * 10 ** this.assetsMetal[options.symbol].precision),
+                        "asset_id": this.assetsMetal[options.symbol].id
+                    },
+                    "quote": {
+                        "amount": 10 ** this.assets[this.options.config.coreAsset].precision,
+                        "asset_id": this.assets[this.options.config.coreAsset].id // 1.0.3
+                    }
+                }
+            }
+        };
+
+        let tx = this.account.newTx();
+        tx.asset_publish_feed(params);
+        await tx.broadcast();
+        console.log('publish price metal', options.symbol);
     }
 
 
