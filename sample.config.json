@@ -67,7 +67,6 @@
       }
     },
     "assetsMetal": {
-      "isActive": false,
       "GOLD1.0": {
         "SYMBOL": "GOLD",
         "MCR": 1.75,
