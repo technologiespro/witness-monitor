@@ -62,10 +62,8 @@ async function feelPrices() {
     let feedAssets = Object.keys(CONFIG.priceFeeds.assets);
     latestFeeds = await paprika.getPrices();
     for (let i = 0; i < feedAssets.length; i++) {
-        assets[feedAssets[i]] = (await BitShares.assets[feedAssets[i]])
-        //let cerOrderBook = await getAvgPrice(feedAssets[i], 'BTS')
-        //console.log('cerOrderBook', cerOrderBook)
-        latestFeeds[feedAssets[i]].cer = (latestFeeds[feedAssets[i]].price + (latestFeeds[feedAssets[i]].price * 0.08)).toFixed(8) * 1
+        assets[feedAssets[i]] = (await BitShares.assets[feedAssets[i]]);
+        latestFeeds[feedAssets[i]].cer = (latestFeeds[feedAssets[i]].price + (latestFeeds[feedAssets[i]].price * 0.08)).toFixed(8) * 1;
     }
 }
 
@@ -91,7 +89,7 @@ async function publishAllFeeds() {
                     price: latestFeeds[feedAssets[i]].price,
                     cer: latestFeeds[feedAssets[i]].cer
                 });
-            } catch(e) {
+            } catch (e) {
                 console.log('err publish', feedAssets[i]);
             }
 
@@ -114,15 +112,16 @@ router.get('/feeds', async function (req, res, next) {
     await res.json(latestFeeds)
 });
 
-/*
-router.get('/publish', async function (req, res, next) {
-    await publishAllFeeds();
-    await res.json({
-        status: 'published',
-        data: latestFeeds
-    })
-});
- */
+
+if (CONFIG.dev) {
+    router.get('/publish', async function (req, res, next) {
+        await publishAllFeeds();
+        await res.json({
+            status: 'published',
+            data: latestFeeds
+        })
+    });
+}
 
 
 module.exports = router;

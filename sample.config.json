@@ -1,7 +1,7 @@
 {
   "port": 3090,
   "appKey": "123456",
-  "devMode": false,
+  "dev": false,
   "node": "ws://localhost:8090",
   "coreAsset": "BTS",
   "producer": {
