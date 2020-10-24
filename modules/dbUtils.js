@@ -4,7 +4,7 @@ class dbUtils {
     }
 
     async dbGet(key) {
-        let result = null
+        let result = null;
         try {
             result = await this.db.get(key)
         } catch(e) {
@@ -15,7 +15,7 @@ class dbUtils {
 
     async dbObj(from, to, limit = 10000) {
         return new Promise((resolve, reject) => {
-            let result = {}
+            let result = {};
             this.db.createReadStream({gte: from + 'x', lt: to + 'x', "limit": limit})
                 .on('data', function (data) {
                     result[data.key] = data.value
@@ -31,7 +31,7 @@ class dbUtils {
 
     async dbArray(from, to, limit = 10000) {
         return new Promise((resolve, reject) => {
-            let result = []
+            let result = [];
             this.db.createReadStream({limit: limit, gte: from + 'x', lt: to + 'x'})
                 .on('data', function (data) {
                     result.unshift(data.value)
