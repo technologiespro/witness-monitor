@@ -16,11 +16,11 @@ class feeds {
 
     async feelPrices() {
         this.assets[this.options.config.coreAsset] = (await this.options.BitSharesInstance.assets[this.options.config.coreAsset]);
-        let feedAssets = Object.keys(this.options.config.priceFeeds.assets);
+        const feedAssets = Object.keys(this.options.config.priceFeeds.assets);
         this.latestFeeds = await paprika.getPrices();
         for (let i = 0; i < feedAssets.length; i++) {
-            assets[feedAssets[i]] = (await BitShares.assets[feedAssets[i]]);
-            latestFeeds[feedAssets[i]].cer = (latestFeeds[feedAssets[i]].price + (latestFeeds[feedAssets[i]].price * 0.08)).toFixed(8) * 1;
+            this.assets[feedAssets[i]] = (await this.options.BitSharesInstance.assets[feedAssets[i]]);
+            this.latestFeeds[feedAssets[i]].cer = (this.latestFeeds[feedAssets[i]].price + (this.latestFeeds[feedAssets[i]].price * 0.08)).toFixed(8) * 1;
         }
     }
 
