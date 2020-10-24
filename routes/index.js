@@ -29,7 +29,7 @@ if (CONFIG.priceFeeds.cron.hour) {
 }
 
 scheduler.scheduleJob(cronRule, async () => {
-  await feed.publishAllFeeds()
+  latestFeeds = await feed.publishAllFeeds();
 });
 
 router.get('/feeds', async function (req, res, next) {
