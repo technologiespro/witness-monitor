@@ -20,6 +20,11 @@
       "minute": 51
     },
     "assets": {
+      "EUR": {
+        "SYMBOL": "EUR",
+        "MCR": 1.6,
+        "MSSR": 1.02
+      },
       "RUBLE": {
         "SYMBOL": "RUBLE",
         "MCR": 1.75,
@@ -57,6 +62,11 @@
       },
       "BTC1.0": {
         "SYMBOL": "BTC",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
+      "RUB1.0": {
+        "SYMBOL": "RUBLE",
         "MCR": 1.75,
         "MSSR": 1.1
       }
