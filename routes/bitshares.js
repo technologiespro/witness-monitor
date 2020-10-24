@@ -3,8 +3,6 @@ const router = express.Router();
 const BitShares = require('btsdex');
 const jsonFile = require('jsonfile');
 const scheduler = require("node-schedule");
-//const level = require('level');
-//const db = level('.bitshares', {valueEncoding: 'json'});
 const CONFIG = jsonFile.readFileSync('./config.json');
 
 const Paprika = require('../providers/coinpaprika');
