@@ -159,6 +159,7 @@ class feeds {
                 }
             }
         }
+        return this.latestFeedsMetal;
     }
 
 
