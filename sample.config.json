@@ -66,6 +66,18 @@
         "MSSR": 1.1
       }
     },
+    "assetsMetal": {
+      "GOLD1.0": {
+        "SYMBOL": "GOLD",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
+      "SILVER1.0": {
+        "SYMBOL": "SILVER",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      }
+    },
     "priceProviders": {
       "coinpaprika": true
     }
