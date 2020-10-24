@@ -14,12 +14,12 @@ const currency = {
     "SEK": "SEK",
     "KRW": "KRW",
     "BTC": "BTC",
-}
+};
 
 const providerPaprika = new provider({
     apiUrl: "https://api.coinpaprika.com/v1/tickers/bts-bitshares?quotes=",
     currency: currency
-})
+});
 
 class paprika {
     async getPrices() {
