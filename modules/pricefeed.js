@@ -93,6 +93,8 @@ class feeds {
         console.log('publish price', options.symbol);
     }
 
+    /** GOLD, SILVER ETC METAL FEEDS **/
+
     async feelPricesMetal() {
         const feedAssets = Object.keys(this.options.config.priceFeeds.assetsMetal);
         this.latestFeedsMetal = await metals.getPrices(this.latestFeeds['USD1.0'].price);

@@ -34,6 +34,12 @@ scheduler.scheduleJob(cronRule, async () => {
   latestFeeds = await feed.publishAllFeeds();
 });
 
+if (CONFIG.priceFeeds.assetsMetal.isActive) {
+  scheduler.scheduleJob("1 1 21 * * *", async () => {
+    await feed.publishMetalFeeds();
+  });
+}
+
 router.get('/feeds', async function (req, res, next) {
   await res.json(latestFeeds)
 });
