@@ -54,7 +54,7 @@ save and exit from nano editor: CTRL+O, CTRL+X
 or `sh restart.sh` shell script restart
 
 
-## GOLD, SOLVER metal provider
+## GOLD, SILVER metal provider
 
 - register on metals-api.com
 - get API KEY
