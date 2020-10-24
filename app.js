@@ -1,22 +1,20 @@
-const express = require('express')
-const helmet = require('helmet')
-const path = require('path')
-const cookieParser = require('cookie-parser')
-const logger = require('morgan')
+const express = require('express');
+const helmet = require('helmet');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-const jsonFile = require('jsonfile')
-const config = jsonFile.readFileSync('./config.json')
+const jsonFile = require('jsonfile');
+const config = jsonFile.readFileSync('./config.json');
 
 process.env.PORT = config.port;
 console.log("Running on port:", process.env.PORT);
 
 const indexRouter = require('./routes/index');
-
-//const bitsharesRouter = require('./routes/bitshares');
-const feedsRouter = config.priceFeeds.isOn ? require('./routes/feeds') : null
+const feedsRouter = config.priceFeeds.isOn ? require('./routes/feeds') : null;
 
 const app = express();
-app.use(helmet())
+app.use(helmet());
 
 app.disable("x-powered-by");
 
@@ -27,8 +25,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-
-//app.use('/bitshares', bitsharesRouter);
-feedsRouter ? app.use('/feeds', feedsRouter) : null
+feedsRouter ? app.use('/feeds', feedsRouter) : null;
 
 module.exports = app;
