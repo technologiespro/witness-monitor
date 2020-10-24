@@ -39,7 +39,7 @@ router.get('/feeds', async function (req, res, next) {
 
 if (CONFIG.dev) {
   router.get('/publish', async function (req, res, next) {
-    await feed.publishAllFeeds();
+    latestFeeds = await feed.publishAllFeeds();
     await res.json({
       status: 'published',
       data: latestFeeds
