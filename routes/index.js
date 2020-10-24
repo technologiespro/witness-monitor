@@ -11,6 +11,8 @@ let latestFeeds = {};
 BitShares.connect(CONFIG.node);
 BitShares.subscribe('connected', startAfterConnected);
 
+console.log('dev mode', CONFIG.dev);
+
 const feed = new PriceFeed({
   BitSharesInstance: BitShares,
   config: CONFIG,
