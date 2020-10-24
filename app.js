@@ -11,9 +11,8 @@ process.env.PORT = config.port;
 console.log("Running on port:", process.env.PORT);
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 
-const bitsharesRouter = require('./routes/bitshares');
+//const bitsharesRouter = require('./routes/bitshares');
 const feedsRouter = config.priceFeeds.isOn ? require('./routes/feeds') : null
 
 const app = express();
@@ -28,9 +27,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
-app.use('/bitshares', bitsharesRouter);
+//app.use('/bitshares', bitsharesRouter);
 feedsRouter ? app.use('/feeds', feedsRouter) : null
 
 module.exports = app;
