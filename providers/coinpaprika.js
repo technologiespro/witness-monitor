@@ -2,7 +2,7 @@ const provider = require('../modules/provider');
 const jsonFile = require('jsonfile');
 const assets = jsonFile.readFileSync('./config.json').priceFeeds.assets;
 
-// bitshares symbol:paprika symbol
+// BitShares symbol:Paprika symbol
 const currency = {
     "EUR": "EUR",
     "RUBLE": "RUB",
