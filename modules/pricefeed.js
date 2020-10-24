@@ -47,6 +47,45 @@ class feeds {
         }
     }
 
+    async publishPrice(options) {
+        console.log('----------------------');
+        console.log('id', this.assets[options.symbol].id);
+        let params = {
+            "publisher": this.feeder.id,
+            "asset_id": this.assets[options.symbol].id,
+            "feed": {
+                "settlement_price": {
+                    "base": {
+                        "amount": Math.round(options.price * 10 ** this.assets[options.symbol].precision),
+                        "asset_id": this.assets[options.symbol].id
+                    },
+                    "quote": {
+                        "amount": 10 ** this.assets[this.options.config.coreAsset].precision,
+                        "asset_id": this.assets[this.options.config.coreAsset].id // 1.0.3
+                    }
+                },
+                "maintenance_collateral_ratio": this.options.config.priceFeeds.assets[options.symbol].MCR * 1000,
+                "maximum_short_squeeze_ratio": this.options.config.priceFeeds.assets[options.symbol].MSSR * 1000,
+                "core_exchange_rate": {
+                    "base": {
+                        "amount": Math.round(options.cer * 10 ** this.assets[options.symbol].precision),
+                        "asset_id": this.assets[options.symbol].id
+                    },
+                    "quote": {
+                        "amount": 10 ** this.assets[this.options.config.coreAsset].precision,
+                        "asset_id": this.assets[this.options.config.coreAsset].id // 1.0.3
+                    }
+                }
+            }
+        };
+
+        let tx = this.account.newTx();
+        tx.asset_publish_feed(params);
+        let result = await tx.broadcast();
+        console.log('publish price', options.symbol);
+        //console.log('tx result', result);
+    }
+
 
 }
 
