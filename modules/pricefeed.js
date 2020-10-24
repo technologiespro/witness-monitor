@@ -92,13 +92,13 @@ class feeds {
         console.log('publish price', options.symbol);
     }
 
-    async function feelPricesMetal() {
-        const feedAssets = Object.keys(CONFIG.priceFeeds.assetsMetal);
-        this.latestFeedsMetal = await metals.getPrices(latestFeeds['USD1.0'].price);
+    async feelPricesMetal() {
+        const feedAssets = Object.keys(this.options.config.priceFeeds.assetsMetal);
+        this.latestFeedsMetal = await metals.getPrices(this.latestFeeds['USD1.0'].price);
         for (let i = 0; i < feedAssets.length; i++) {
-            assetsMetal[feedAssets[i]] = (await BitShares.assets[feedAssets[i]]);
+            this.assetsMetal[feedAssets[i]] = (await this.options.BitSharesInstance.assets[feedAssets[i]]);
         }
-        return latestFeedsMetal
+        return this.latestFeedsMetal;
     }
 
 
