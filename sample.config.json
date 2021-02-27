@@ -14,6 +14,21 @@
       "minute": 51
     },
     "assets": {
+      "CHF": {
+        "SYMBOL": "CHF",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
+      "CAD": {
+        "SYMBOL": "CAD",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
+      "MXN": {
+        "SYMBOL": "MXN",
+        "MCR": 1.75,
+        "MSSR": 1.1
+      },
       "EUR": {
         "SYMBOL": "EUR",
         "MCR": 1.6,
