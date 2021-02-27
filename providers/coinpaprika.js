@@ -14,6 +14,9 @@ const currency = {
     "SEK": "SEK",
     "KRW": "KRW",
     "BTC": "BTC",
+    "MXN": "MXN",
+    "CAD": "CAD",
+    "CHF": "CHF",
 };
 
 const providerPaprika = new provider({
