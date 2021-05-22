@@ -34,31 +34,44 @@ class feeds {
         console.log('-----------------------');
         await this.feelPrices();
         const feedAssets = Object.keys(this.options.config.priceFeeds.assets);
+        let preparedTxs = [];
+
         for (let i = 0; i < feedAssets.length; i++) {
             if (this.latestFeeds[feedAssets[i]].cer > 0) {
                 this.latestFeeds[feedAssets[i]].price = Math.floor(this.latestFeeds[feedAssets[i]].price * 10 ** this.assets[feedAssets[i]].precision) / 10 ** this.assets[feedAssets[i]].precision;
                 this.latestFeeds[feedAssets[i]].cer = Math.floor(this.latestFeeds[feedAssets[i]].cer * 10 ** this.assets[feedAssets[i]].precision) / 10 ** this.assets[feedAssets[i]].precision;
+                let tx = this.account.newTx();
                 try {
-                    await this.publishPrice({
+                    tx.asset_publish_feed(await this.publishPrice({
                         symbol: feedAssets[i],
                         price: this.latestFeeds[feedAssets[i]].price,
                         cer: this.latestFeeds[feedAssets[i]].cer
-                    });
+                    }));
                 } catch (e) {
                     console.log('err publish', feedAssets[i]);
                 }
 
+                try {
+                    await tx.broadcast();
+                } catch(e) {
+                    console.log('err tx', e)
+                }
             }
         }
+
+
+
+
         return this.latestFeeds;
     }
 
     async publishPrice(options) {
         console.log('----------------------');
+        console.log('symbol', options.symbol);
         console.log('id', this.assets[options.symbol].id);
         console.log('price', options.price);
         console.log('cer', options.cer);
-        const params = {
+        return ({
             "publisher": this.feeder.id,
             "asset_id": this.assets[options.symbol].id,
             "feed": {
@@ -85,12 +98,11 @@ class feeds {
                     }
                 }
             }
-        };
-
-        let tx = this.account.newTx();
-        tx.asset_publish_feed(params);
-        await tx.broadcast();
-        console.log('publish price', options.symbol);
+        });
+        //let tx = this.account.newTx();
+        //tx.asset_publish_feed(params);
+        //await tx.broadcast();
+        //console.log('publish price', options.symbol);
     }
 
     /** GOLD, SILVER ETC METAL FEEDS **/
