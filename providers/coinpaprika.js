@@ -24,15 +24,25 @@ const providerPaprika = new provider({
     currency: currency
 });
 
+
+
 class paprika {
     async getPrices() {
-        const quotes = (await providerPaprika.getPrices()).quotes;
+        let quotes = (await providerPaprika.getPrices()).quotes;
+        //console.log(quotes)
         let result = {};
         let qAssets = Object.keys(assets);
+        const UsdCNY = await providerPaprika.getPriceUSDCNY();
+        console.log('UsdCNY', UsdCNY);
+
         for (let i = 0; i < qAssets.length; i++) {
+            if (assets[qAssets[i]].SYMBOL === 'CNY') {
+                quotes['CNY'].price = UsdCNY * quotes['USD'].price;
+                console.log('CNY_BTS', quotes[currency[assets[qAssets[i]].SYMBOL]].price);
+            }
             result[qAssets[i]] = {
                 price: quotes[currency[assets[qAssets[i]].SYMBOL]].price,
-                cer: (quotes[currency[assets[qAssets[i]].SYMBOL]].price + (quotes[currency[assets[qAssets[i]].SYMBOL]].price * 0.10)).toFixed(8) * 1,
+                cer: (quotes[currency[assets[qAssets[i]].SYMBOL]].price + (quotes[currency[assets[qAssets[i]].SYMBOL]].price * 0.22)).toFixed(8) * 1,
             }
         }
         console.log(result);
