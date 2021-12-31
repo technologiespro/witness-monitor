@@ -2,7 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+//const logger = require('morgan'); //dev log
 
 const jsonFile = require('jsonfile');
 const config = jsonFile.readFileSync('./config.json');
@@ -18,7 +18,7 @@ app.use(helmet());
 
 app.disable("x-powered-by");
 
-app.use(logger('dev'));
+//app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
