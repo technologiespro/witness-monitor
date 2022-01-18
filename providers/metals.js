@@ -28,10 +28,10 @@ class metals {
         for (let i = 0; i < assetsKeys.length; i++) {
             if (currency[assets[assetsKeys[i]].SYMBOL]) {
                 let USD_METAL = 1 / rates[currency[assets[assetsKeys[i]].SYMBOL]];
-                let BTS_METAL = (BTS_USD / USD_METAL).toFixed(8) * 1;
+                let BTS_METAL = (BTS_USD / USD_METAL).toFixed(10) * 1;
                 result[assetsKeys[i]] = {
                     price: Math.floor(BTS_METAL * 1000000) / 1000000,
-                    cer: Math.floor((BTS_METAL + (BTS_METAL * 0.18)) * 1000000) / 1000000,
+                    cer: Math.floor((BTS_METAL + (BTS_METAL * 0.17)) * 1000000) / 1000000,
                 };
             }
         }
