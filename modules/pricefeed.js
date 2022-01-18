@@ -1,6 +1,5 @@
 const Paprika = require('../providers/coinpaprika');
 const paprika = new Paprika();
-
 const Metals = require('../providers/metals');
 const metals = new Metals();
 
@@ -11,6 +10,17 @@ class feeds {
         this.latestFeeds = {};
         this.latestFeedsMetal = {};
         this.assetsMetal = {};
+    }
+
+    // Assets Cer for BitShares v6.0.1+
+    async getFixedCer(SYMBOL) {
+        let fAsset = await this.options.BitSharesInstance.assets[SYMBOL];
+        let oAsset =  await this.options.BitSharesInstance.db.get_objects([fAsset.bitasset_data_id]);
+        let cer = 0;
+        if (oAsset[0].settlement_price.base.amount > 0) {
+            cer = (oAsset[0].settlement_price.base.amount / 10 ** fAsset.precision) / (oAsset[0].settlement_price.quote.amount / 10 ** 5);
+        }
+        return cer;
     }
 
     async init() {
@@ -25,7 +35,12 @@ class feeds {
         this.latestFeeds = await paprika.getPrices();
         for (let i = 0; i < feedAssets.length; i++) {
             this.assets[feedAssets[i]] = (await this.options.BitSharesInstance.assets[feedAssets[i]]);
-            this.latestFeeds[feedAssets[i]].cer = (this.latestFeeds[feedAssets[i]].price + (this.latestFeeds[feedAssets[i]].price * 0.08)).toFixed(8) * 1;
+            const cer = await this.getFixedCer(feedAssets[i]);
+            if (cer > 0) {
+                this.latestFeeds[feedAssets[i]].cer = (cer).toFixed(8) * 1;
+            } else {
+                this.latestFeeds[feedAssets[i]].cer = (this.latestFeeds[feedAssets[i]].price + (this.latestFeeds[feedAssets[i]].price * 0.16)).toFixed(8) * 1;
+            }
         }
         return this.latestFeeds;
     }
@@ -39,7 +54,7 @@ class feeds {
         for (let i = 0; i < feedAssets.length; i++) {
             if (this.latestFeeds[feedAssets[i]].cer > 0) {
                 this.latestFeeds[feedAssets[i]].price = Math.floor(this.latestFeeds[feedAssets[i]].price * 10 ** this.assets[feedAssets[i]].precision) / 10 ** this.assets[feedAssets[i]].precision;
-                this.latestFeeds[feedAssets[i]].cer = Math.floor(this.latestFeeds[feedAssets[i]].cer * 10 ** this.assets[feedAssets[i]].precision) / 10 ** this.assets[feedAssets[i]].precision;
+                //this.latestFeeds[feedAssets[i]].cer = Math.floor(this.latestFeeds[feedAssets[i]].cer * 10 ** this.assets[feedAssets[i]].precision) / 10 ** this.assets[feedAssets[i]].precision;
                 let tx = this.account.newTx();
                 try {
                     tx.asset_publish_feed(await this.publishPrice({
@@ -59,8 +74,7 @@ class feeds {
             }
         }
 
-
-
+        //await this.publishMetalFeeds()
 
         return this.latestFeeds;
     }
@@ -109,7 +123,7 @@ class feeds {
 
     async feelPricesMetal() {
         const feedAssets = Object.keys(this.options.config.priceFeeds.assetsMetal);
-        this.latestFeedsMetal = await metals.getPrices(this.latestFeeds['USD1.0'].price);
+        this.latestFeedsMetal = await metals.getPrices(this.latestFeeds['USD'].price);
         for (let i = 0; i < feedAssets.length; i++) {
             this.assetsMetal[feedAssets[i]] = (await this.options.BitSharesInstance.assets[feedAssets[i]]);
         }
