@@ -25,7 +25,6 @@ const providerPaprika = new provider({
 });
 
 
-
 class paprika {
     async getPrices() {
         let quotes = (await providerPaprika.getPrices()).quotes;
@@ -33,16 +32,22 @@ class paprika {
         let qAssets = Object.keys(assets);
         const UsdCNY = await providerPaprika.getPriceUSDCNY();
         const priceGOLD = await providerPaprika.getPriceGOLD();
+        const priceSILVER = await providerPaprika.getPriceSILVER();
         for (let i = 0; i < qAssets.length; i++) {
             if (assets[qAssets[i]].SYMBOL === 'CNY') {
                 quotes['CNY'].price = UsdCNY * quotes['USD'].price;
             }
 
-            if (assets[qAssets[i]].SYMBOL === 'GOLD') {
-                const GOLD_BTS = (priceGOLD.quotes['USD'].price / quotes['USD'].price);
-                //console.log('GOLD_BTS',GOLD_BTS)
+            if (assets[qAssets[i]].SYMBOL === 'SILVER') {
+                const SILVER_BTS = (priceSILVER.quotes['USD'].price / quotes['USD'].price);
                 result[qAssets[i]] = {
-                    price: (1/ GOLD_BTS).toFixed(6) * 1,
+                    price: (1 / SILVER_BTS).toFixed(6) * 1,
+                    cer: (1 / (SILVER_BTS + (SILVER_BTS * 0.10))).toFixed(6) * 1,
+                }
+            } else if (assets[qAssets[i]].SYMBOL === 'GOLD') {
+                const GOLD_BTS = (priceGOLD.quotes['USD'].price / quotes['USD'].price);
+                result[qAssets[i]] = {
+                    price: (1 / GOLD_BTS).toFixed(6) * 1,
                     cer: (1 / (GOLD_BTS + (GOLD_BTS * 0.10))).toFixed(6) * 1,
                 }
             } else {

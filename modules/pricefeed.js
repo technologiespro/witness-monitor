@@ -1,15 +1,11 @@
 const Paprika = require('../providers/coinpaprika');
 const paprika = new Paprika();
-const Metals = require('../providers/metals');
-const metals = new Metals();
 
 class feeds {
     constructor(options) {
         this.options = options;
         this.assets = {};
         this.latestFeeds = {};
-        this.latestFeedsMetal = {};
-        this.assetsMetal = {};
     }
 
     // Assets Cer for BitShares v6.0.1+
@@ -78,9 +74,6 @@ class feeds {
                 }
             }
         }
-
-        //await this.publishMetalFeeds()
-
         return this.latestFeeds;
     }
 
@@ -124,76 +117,6 @@ class feeds {
         //console.log('publish price', options.symbol);
     }
 
-    /** GOLD, SILVER ETC METAL FEEDS **/
-
-    async feelPricesMetal() {
-        const feedAssets = Object.keys(this.options.config.priceFeeds.assetsMetal);
-        this.latestFeedsMetal = await metals.getPrices(this.latestFeeds['USD'].price);
-        for (let i = 0; i < feedAssets.length; i++) {
-            this.assetsMetal[feedAssets[i]] = (await this.options.BitSharesInstance.assets[feedAssets[i]]);
-        }
-        return this.latestFeedsMetal;
-    }
-
-    async publishPriceMetal(options) {
-        console.log('id', this.assetsMetal[options.symbol].id);
-        let params = {
-            "publisher": this.feeder.id,
-            "asset_id": this.assetsMetal[options.symbol].id,
-            "feed": {
-                "settlement_price": {
-                    "base": {
-                        "amount": Math.round(options.price * 10 ** this.assetsMetal[options.symbol].precision),
-                        "asset_id": this.assetsMetal[options.symbol].id
-                    },
-                    "quote": {
-                        "amount": 10 ** this.assets[this.options.config.coreAsset].precision,
-                        "asset_id": this.assets[this.options.config.coreAsset].id // 1.0.3
-                    }
-                },
-                "maintenance_collateral_ratio": this.options.config.priceFeeds.assetsMetal[options.symbol].MCR * 1000,
-                "maximum_short_squeeze_ratio": this.options.config.priceFeeds.assetsMetal[options.symbol].MSSR * 1000,
-                "core_exchange_rate": {
-                    "base": {
-                        "amount": Math.round(options.cer * 10 ** this.assetsMetal[options.symbol].precision),
-                        "asset_id": this.assetsMetal[options.symbol].id
-                    },
-                    "quote": {
-                        "amount": 10 ** this.assets[this.options.config.coreAsset].precision,
-                        "asset_id": this.assets[this.options.config.coreAsset].id // 1.0.3
-                    }
-                }
-            }
-        };
-
-        let tx = this.account.newTx();
-        tx.asset_publish_feed(params);
-        await tx.broadcast();
-        console.log('publish price metal', options.symbol);
-    }
-
-    async publishMetalFeeds() {
-        console.log('-----------------------');
-        await this.feelPricesMetal();
-        const feedAssets = Object.keys(this.options.config.priceFeeds.assetsMetal);
-        console.log(feedAssets, this.latestFeedsMetal);
-
-        for (let i = 0; i < feedAssets.length; i++) {
-            if (this.latestFeedsMetal[feedAssets[i]].cer > 0) {
-                try {
-                    await this.publishPriceMetal({
-                        symbol: feedAssets[i],
-                        price: this.latestFeedsMetal[feedAssets[i]].price,
-                        cer: this.latestFeedsMetal[feedAssets[i]].cer
-                    });
-                } catch(e) {
-                    console.log(e);
-                    console.log('err publish', feedAssets[i]);
-                }
-            }
-        }
-        return this.latestFeedsMetal;
-    }
 
 
 }

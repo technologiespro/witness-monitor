@@ -27,11 +27,6 @@ scheduler.scheduleJob("1 */" + CONFIG.priceFeeds.cron.minute + " * * * *", async
     latestFeeds = await feed.publishAllFeeds();
 });
 
-if (CONFIG.API.METALS !== '') {
-    scheduler.scheduleJob("1 1 21 * * *", async () => {
-        await feed.publishMetalFeeds();
-    });
-}
 
 router.get('/feeds', async function (req, res, next) {
     await res.json(latestFeeds)
@@ -46,15 +41,6 @@ if (CONFIG.dev) {
             data: latestFeeds
         })
     });
-
-    router.get('/publish-metal', async function (req, res, next) {
-        let latestFeedsMetal = await feed.publishMetalFeeds();
-        await res.json({
-            status: 'published',
-            data: latestFeedsMetal
-        })
-    });
-
 }
 
 module.exports = router;
