@@ -39,6 +39,17 @@ class priceProvider {
         }
         return USD_CNY;
     }
+
+    async getPriceGOLD() {
+        let result = null;
+        const apiUrl = "https://api.coinpaprika.com/v1/tickers/xaut-tether-gold";
+        try {
+            result = (await axios.get(apiUrl)).data;
+        } catch(e) {
+
+        }
+        return result
+    }
 }
 
 
