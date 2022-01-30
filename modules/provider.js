@@ -50,6 +50,17 @@ class priceProvider {
         }
         return result
     }
+
+    async getPriceSILVER() {
+        let result = null;
+        const apiUrl = "https://api.coinpaprika.com/v1/tickers/xag-silver-spot-token";
+        try {
+            result = (await axios.get(apiUrl)).data;
+        } catch(e) {
+
+        }
+        return result
+    }
 }
 
 
