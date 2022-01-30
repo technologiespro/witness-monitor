@@ -29,23 +29,31 @@ const providerPaprika = new provider({
 class paprika {
     async getPrices() {
         let quotes = (await providerPaprika.getPrices()).quotes;
-        //console.log(quotes)
         let result = {};
         let qAssets = Object.keys(assets);
         const UsdCNY = await providerPaprika.getPriceUSDCNY();
-        console.log('UsdCNY', UsdCNY);
-
+        const priceGOLD = await providerPaprika.getPriceGOLD();
         for (let i = 0; i < qAssets.length; i++) {
             if (assets[qAssets[i]].SYMBOL === 'CNY') {
                 quotes['CNY'].price = UsdCNY * quotes['USD'].price;
-                console.log('CNY_BTS', quotes[currency[assets[qAssets[i]].SYMBOL]].price);
             }
-            result[qAssets[i]] = {
-                price: quotes[currency[assets[qAssets[i]].SYMBOL]].price,
-                cer: (quotes[currency[assets[qAssets[i]].SYMBOL]].price + (quotes[currency[assets[qAssets[i]].SYMBOL]].price * 0.10)).toFixed(8) * 1,
+
+            if (assets[qAssets[i]].SYMBOL === 'GOLD') {
+                const GOLD_BTS = (priceGOLD.quotes['USD'].price / quotes['USD'].price);
+                //console.log('GOLD_BTS',GOLD_BTS)
+                result[qAssets[i]] = {
+                    price: (1/ GOLD_BTS).toFixed(6) * 1,
+                    cer: (1 / (GOLD_BTS + (GOLD_BTS * 0.10))).toFixed(6) * 1,
+                }
+            } else {
+                result[qAssets[i]] = {
+                    price: quotes[currency[assets[qAssets[i]].SYMBOL]].price,
+                    cer: (quotes[currency[assets[qAssets[i]].SYMBOL]].price + (quotes[currency[assets[qAssets[i]].SYMBOL]].price * 0.10)).toFixed(8) * 1,
+                }
             }
         }
         return result
+
     }
 }
 

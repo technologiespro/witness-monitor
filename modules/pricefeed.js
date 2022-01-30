@@ -35,11 +35,16 @@ class feeds {
         this.latestFeeds = await paprika.getPrices();
         for (let i = 0; i < feedAssets.length; i++) {
             this.assets[feedAssets[i]] = (await this.options.BitSharesInstance.assets[feedAssets[i]]);
-            const cer = await this.getFixedCer(feedAssets[i]);
+            let cer = await this.getFixedCer(feedAssets[i]);
+            let cerFactor = (this.latestFeeds[feedAssets[i]].price + (this.latestFeeds[feedAssets[i]].price * 0.16)).toFixed(8) * 1;
+            if (cer < this.latestFeeds[feedAssets[i]].price) {
+                cer = cerFactor;
+            }
+
             if (cer > 0) {
                 this.latestFeeds[feedAssets[i]].cer = (cer).toFixed(8) * 1;
             } else {
-                this.latestFeeds[feedAssets[i]].cer = (this.latestFeeds[feedAssets[i]].price + (this.latestFeeds[feedAssets[i]].price * 0.16)).toFixed(8) * 1;
+                this.latestFeeds[feedAssets[i]].cer = cerFactor;
             }
         }
         return this.latestFeeds;

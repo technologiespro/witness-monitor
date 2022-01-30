@@ -64,6 +64,11 @@
         "MCR": 1.75,
         "MSSR": 1.1
       },
+      "USD": {
+        "SYMBOL": "USD",
+        "MCR": 1.25,
+        "MSSR": 1.05
+      },
       "USD1.0": {
         "SYMBOL": "USD",
         "MCR": 1.75,
@@ -78,14 +83,14 @@
         "SYMBOL": "RUBLE",
         "MCR": 1.75,
         "MSSR": 1.1
-      }
-    },
-    "assetsMetal": {
+      },
       "GOLD1.0": {
         "SYMBOL": "GOLD",
         "MCR": 1.75,
         "MSSR": 1.1
-      },
+      }
+    },
+    "assetsMetal": {
       "SILVER1.0": {
         "SYMBOL": "SILVER",
         "MCR": 1.75,
