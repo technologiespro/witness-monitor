@@ -8,8 +8,9 @@ const currency = {
     "RUBLE": "RUB",
     "USD": "USD",
     "CNY": "CNY",
-    "BTC": "BTC",
+    //"BTC": "BTC",
 
+    /*
     "JPY": "JPY",
     "GBP": "GBP",
     "AUD": "AUD",
@@ -19,6 +20,8 @@ const currency = {
     "MXN": "MXN",
     "CAD": "CAD",
     "CHF": "CHF",
+
+     */
 };
 
 const providerPaprika = new provider({
@@ -33,11 +36,12 @@ class paprika {
                 "EUR": "EUR",
                 "RUBLE": "RUB",
                 "USD": "USD",
+                //"CNY": "CNY",
             })).quotes;
 
         let quotes2 = (await providerPaprika.getPrices(
             {
-                "CNY": "CNY",
+                "KRW": "KRW",
                 "BTC": "BTC",
                 "JPY": "JPY",
             })).quotes;
@@ -58,11 +62,11 @@ class paprika {
 
         let quotes5 = (await providerPaprika.getPrices(
             {
-                "KRW": "KRW",
+                "CNY": "CNY",
             })).quotes;
 
 
-        let quotes = Object.assign(quotes1, quotes2, quotes3, quotes4, quotes5);
+        let quotes = Object.assign(quotes1); //,  quotes2,quotes3,quotes4,  quotes5
 
         let result = {};
         let qAssets = Object.keys(assets);
@@ -91,6 +95,7 @@ class paprika {
                     cer: (1 / (GOLD_BTS + (GOLD_BTS * 0.10))).toFixed(6) * 1,
                 }
             } else {
+                console.log(assets[qAssets[i]].SYMBOL)
                 result[qAssets[i]] = {
                     price: quotes[currency[assets[qAssets[i]].SYMBOL]].price,
                     cer: (quotes[currency[assets[qAssets[i]].SYMBOL]].price + (quotes[currency[assets[qAssets[i]].SYMBOL]].price * 0.10)).toFixed(8) * 1,
